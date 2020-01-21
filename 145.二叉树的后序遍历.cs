@@ -40,13 +40,15 @@
  *     public TreeNode(int x) { val = x; }
  * }
  */
+ using System.Collections.Generic;
+
 public class Solution 
 {
     private List<int> _values = new List<int>();
 
     public IList<int> PostorderTraversal(TreeNode root) 
     {
-        PostOrder(root);
+        StackTraversal(root);
         return _values;
     }
 
@@ -62,6 +64,39 @@ public class Solution
         PostOrder(node.left);
         PostOrder(node.right);
         _values.Add(node.val);
+    }
+
+    // 遍历写法
+    public void StackTraversal(TreeNode root)
+    {
+        Stack<TreeNode> tempStack = new Stack<TreeNode>();
+
+        TreeNode currentNode = root;
+        while (currentNode != null || tempStack.Count > 0)
+        {
+            while (currentNode != null)
+            {
+                tempStack.Push(currentNode);
+                Tree leftNode = currentNode.left;
+                if (leftNode != null) {
+                    currentNode = leftNode;
+                }
+                else {
+                    currentNode = currentNode.right;
+                }
+            }
+
+            TreeNode node = tempStack.Peek();
+            if (node.right != null)
+            {
+                currentNode = node.right;
+            }            
+            else
+            {
+                tempStack.Pop();
+                _values.Add(node.val);
+            }
+        }
     }
 }
 // @lc code=end

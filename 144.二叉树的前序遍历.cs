@@ -50,7 +50,7 @@ public class Solution
 
     public IList<int> PreorderTraversal(TreeNode root) 
     {
-        PreOrder(root);
+        StackTraversal(root);
         return _values;
     }
 
@@ -66,6 +66,24 @@ public class Solution
         _values.Add(node.val);
         PreOrder(node.left);
         PreOrder(node.right);
+    }
+
+    
+    // 遍历写法
+    public void StackTraversal(TreeNode root)
+    {
+        Stack<TreeNode> tempStack = new Stack<TreeNode>();
+
+        TreeNode currentNode = root;
+        while (currentNode != null || tempStack.Count > 0)
+        {
+            _values.Add(currentNode.val);
+            while (currentNode != null)
+            {
+                tempStack.Push(currentNode);
+                currentNode = currentNode.left;
+            }
+        }
     }
 }
 // @lc code=end
