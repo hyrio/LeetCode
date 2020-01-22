@@ -57,10 +57,10 @@
 // @lc code=start
 public class Solution {
     public int Fib(int N) {
-        return FibInner(N);
+        return Loop(N);
     }
 
-//dd
+    // 递归方法
      public int FibInner(int n)
     {
         if (n <= 0) {
@@ -72,6 +72,31 @@ public class Solution {
         }
 
         return FibInner(n - 1) + FibInner(n - 2);
+    }
+
+    public int Loop(int n)
+    {
+        if (n == 0)
+        {
+            return 0;
+        }
+
+        if (n == 1)
+        {
+            return 1;
+        }
+
+        int sum = 0;
+        int prepre = 0;
+        int pre = 1;        
+        for (int i = 2; i <= n; i ++)
+        {
+            sum = prepre + pre;
+            prepre = pre;
+            pre = sum;
+        }
+
+        return sum;
     }
 }
 // @lc code=end
