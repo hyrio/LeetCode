@@ -60,59 +60,24 @@
 public class Solution {
     public bool IsValidBST(TreeNode root) 
     {
-        if (root == null) {
-            return true;
-        }
-
-        var leftNode = root.left;
-        var rightNode = root.right;
-
-        bool IsLeftChildBST = false;
-        if (leftNode == null || leftNode.val < root.val)
-        {
-            IsLeftChildBST = IsChildBST(leftNode, root.val, true);
-        }
-
-        bool IsRightChildBST = false;
-        if (rightNode == null || rightNode.val > root.val)
-        {
-            IsRightChildBST = IsChildBST(rightNode, root.val, false);
-        }
-            
-        return IsLeftChildBST && IsRightChildBST;
+        return IsChildBST(root, long.MinValue, long.MaxValue);
     }
 
-    public bool IsChildBST(TreeNode node, int rootValue, bool isLeft)
+    public bool IsChildBST(TreeNode node, long lowerValue, long upperValue)
     {
         if (node == null) {
             return true;
         }
 
-        int parentValue = node.val;
-        if (parentValue >= rootValue && isLeft) {
-            return false;
-        }
-
-        if (parentValue <= rootValue && !isLeft) {
-            return false;
-        }
-
-        TreeNode leftNode = node.left;
-        TreeNode rightNode = node.right;
-
-        bool isLeftBST = false;
-        if (leftNode == null || (leftNode != null && leftNode.val < parentValue))
+        int nodeValue = node.val;
+        if (nodeValue > lowerValue && nodeValue < upperValue)
         {
-            isLeftBST = IsChildBST(leftNode, rootValue, isLeft);
-        }        
+            bool IsLeftChildBST = IsChildBST(node.left, lowerValue, nodeValue);   
+            bool IsRightChildBST = IsChildBST(node.right, nodeValue, upperValue);
+            return IsLeftChildBST && IsRightChildBST;
+        }     
 
-        bool isRightBST = false;
-        if (rightNode == null || (rightNode != null && rightNode.val > parentValue))
-        {
-            isRightBST = IsChildBST(rightNode, rootValue, isLeft);
-        }        
-
-        return isLeftBST && isRightBST;
+        return false;   
     }
 }
 // @lc code=end
