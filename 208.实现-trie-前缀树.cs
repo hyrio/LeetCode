@@ -4,19 +4,24 @@
  * [208] 实现 Trie (前缀树)
  */
 
+using System.Collections.Generic;
+
 // @lc code=start
 public class Trie
 {
     public class TrieNode
     {
+        private Dictionary<char, TrieNode> _childNodeMap;
+
+        public bool IsWord { get; set; }
+
+        public Dictionary<char, TrieNode> ChildNodeMap { get { return _childNodeMap; } }
+
         public TrieNode()
         {
-            Value = 0;
-            ChildNodeMap = new Dictionary<char, TrieNode>();
+            IsWord = false;
+            _childNodeMap = new Dictionary<char, TrieNode>();
         }
-
-        public int Value;
-        public Dictionary<char, TrieNode> ChildNodeMap;
     }
 
     private TrieNode _root;
@@ -44,17 +49,33 @@ public class Trie
             }
 
             node = childNode;
-            if (i == word.Length - 1)
-            {
-                node.Value = 1;
-            }
         }
+
+        node.IsWord = true;
     }
 
     /** Returns if the word is in the trie. */
     public bool Search(string word)
     {
-        TrieNode node = _root;
+        if (FindWordNode(word, out TrieNode node))
+        {
+            return node.IsWord;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public bool StartsWith(string prefix)
+    {
+        return FindWordNode(prefix, out TrieNode node);
+    }
+
+    public bool FindWordNode(string word, out TrieNode node)
+    {
+        node = _root;
         for (int i = 0; i < word.Length; i++)
         {
             var childNodeMap = node.ChildNodeMap;
@@ -71,50 +92,10 @@ public class Trie
                 return false;
             }
 
-            if (i != word.Length - 1)
-            {
-                node = childNode;
-            }
-            else
-            {
-                return childNode.Value == 1;
-            }
+            node = childNode;
         }
 
-        return false;
-    }
-
-    /** Returns if there is any word in the trie that starts with the given prefix. */
-    public bool StartsWith(string prefix)
-    {
-        TrieNode node = _root;
-        for (int i = 0; i < prefix.Length; i++)
-        {
-            var childNodeMap = node.ChildNodeMap;
-            if (childNodeMap == null)
-            {
-                return false;
-            }
-
-            char c = prefix[i];
-
-            TrieNode childNode;
-            if (!childNodeMap.TryGetValue(c, out childNode))
-            {
-                return false;
-            }
-
-            if (i == prefix.Length - 1)
-            {
-                return true;
-            }
-            else
-            {
-                node = childNode;
-            }
-        }
-
-        return false;
+        return true;
     }
 }
 
